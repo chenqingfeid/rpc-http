@@ -5,7 +5,28 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Represents HTTP {@code PATCH} method
+ * 
+ * @author johnsonlee
+ *
+ */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Patch {
+
+    /**
+     * The HTTP request content type
+     * 
+     * @return HTTP request content type
+     */
+    String contentType();
+
+    /**
+     * The HTTP request headers
+     * 
+     * @return HTTP reqeust headers
+     */
+    String[] headers() default {};
+
 }

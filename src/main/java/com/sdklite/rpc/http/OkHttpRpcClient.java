@@ -13,6 +13,8 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSocketFactory;
 
 import com.sdklite.net.DnsResolver;
+import com.sdklite.rpc.RpcContext;
+import com.sdklite.rpc.RpcInterceptor;
 import com.squareup.okhttp.Dispatcher;
 import com.squareup.okhttp.Dns;
 import com.squareup.okhttp.OkHttpClient;
@@ -110,12 +112,26 @@ class OkHttpRpcClient implements HttpRpcClient {
 
         private final OkHttpClient delegate;
 
-        public Builder() {
+        public Builder(final RpcContext<Object> contextProvider) {
             this.delegate = newDefaultOkHttpClient();
         }
 
         private Builder(final OkHttpRpcClient client) {
             this.delegate = client.delegate;
+        }
+
+        public Builder addInterceptor(final HttpRpcInterceptor interceptor) {
+            return this.addInterceptor0(interceptor);
+        }
+
+        @Override
+        public Builder addInterceptor(final RpcInterceptor<HttpRpcRequest, HttpRpcResponse> interceptor) {
+            return this.addInterceptor0(interceptor);
+        }
+
+        private Builder addInterceptor0(final RpcInterceptor<HttpRpcRequest, HttpRpcResponse> interceptor) {
+            this.delegate.interceptors().add(new OkHttpRpc.OkHttpRpcInterceptor(interceptor));
+            return this;
         }
 
         @Override
