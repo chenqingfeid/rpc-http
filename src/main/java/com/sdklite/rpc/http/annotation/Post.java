@@ -20,7 +20,7 @@ public @interface Post {
      * 
      * @return HTTP request content type
      */
-    String contentType();
+    String contentType() default "application/x-www-form-urlencoded";
 
     /**
      * The HTTP request headers
