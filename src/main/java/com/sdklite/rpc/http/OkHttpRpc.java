@@ -39,8 +39,18 @@ class OkHttpRpc implements HttpRpc {
     }
 
     @Override
+    public void cancel() {
+        this.client.cancel(this.request.getTag());
+    }
+
+    @Override
     public HttpRpcResponse execute() throws RpcException {
-        return new HttpRpcResponse.Builder().setRequest(this.request).build();
+        final Request req = createRequest(this.request);
+        try {
+            return parseResponse(this.request, this.client.delegate.newCall(req).execute());
+        } catch (final IOException e) {
+            throw new RpcException(e);
+        }
     }
 
     @Override
@@ -53,7 +63,7 @@ class OkHttpRpc implements HttpRpc {
         return this.enqueue0(callback);
     }
 
-    private Object enqueue0(final Rpc.Callback<HttpRpcRequest, HttpRpcResponse> callback) {
+    private synchronized Object enqueue0(final Rpc.Callback<HttpRpcRequest, HttpRpcResponse> callback) {
         this.client.getExecutorService().execute(new Runnable() {
             @Override
             public void run() {

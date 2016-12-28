@@ -1,5 +1,7 @@
 package com.sdklite.rpc.http;
 
+import java.io.IOException;
+
 import com.sdklite.net.http.HttpEntity;
 import com.sdklite.net.http.HttpHeader;
 import com.sdklite.net.http.HttpMessage;
@@ -21,8 +23,9 @@ public class HttpRpcResponse extends HttpMessage implements RpcResponse {
     }
 
     @Override
-    public <T> T getContent() {
-        return null;
+    @SuppressWarnings("unchecked")
+    public <T> T getContent() throws IOException {
+        return (T) this.request.getDeserializer().deserialize(getEntity().getContent());
     }
 
     @Override

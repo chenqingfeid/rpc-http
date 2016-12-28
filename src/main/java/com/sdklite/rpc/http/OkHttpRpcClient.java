@@ -21,10 +21,15 @@ import com.squareup.okhttp.OkHttpClient;
 
 class OkHttpRpcClient implements HttpRpcClient {
 
-    private final OkHttpClient delegate;
+    final OkHttpClient delegate;
 
     private OkHttpRpcClient(final Builder builder) {
         this.delegate = builder.delegate;
+    }
+
+    @Override
+    public void cancel(final Object tag) {
+        this.delegate.cancel(tag);
     }
 
     @Override
