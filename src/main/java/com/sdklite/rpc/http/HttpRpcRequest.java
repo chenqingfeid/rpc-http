@@ -12,8 +12,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.json.JSONObject;
-
 import com.sdklite.io.Deserializer;
 import com.sdklite.io.NullDeserializer;
 import com.sdklite.io.Serializer;
@@ -249,7 +247,7 @@ public class HttpRpcRequest extends HttpMessage implements RpcRequest {
             if (null != paramAnnotations && paramAnnotations.length > 0) {
                 for (int i = 0, n = paramAnnotations.length - (null == callback ? 0 : 1); i < n; i++) {
                     final Object value = args[i];
-                    if (null == value || JSONObject.NULL == value) {
+                    if (null == value) {
                         continue;
                     }
 

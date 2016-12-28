@@ -31,6 +31,11 @@
   <dependencies>
     <dependency>
       <groupId>com.sdklite</groupId>
+      <artifactId>io</artifactId>
+      <version>0.0.2</version>
+    </dependency>
+    <dependency>
+      <groupId>com.sdklite</groupId>
       <artifactId>rpc</artifactId>
       <version>0.0.2</version>
     </dependency>
