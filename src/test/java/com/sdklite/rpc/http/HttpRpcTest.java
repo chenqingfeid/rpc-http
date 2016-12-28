@@ -20,14 +20,12 @@ public class HttpRpcTest {
         this.client = new OkHttpRpcClient.Builder(null).build();
     }
 
-    @Test
     public void requestWithGet() throws RpcException, IOException {
         final HttpRpcRequest request = this.client.newRequestBuilder().get("https://api.github.com/users/johnsonlee/repos").build();
         final HttpRpcResponse response = this.client.newRpc(request).execute();
         Assert.assertEquals(200, response.getStatusCode());
     }
-    
-    @Test
+
     public void getWithRpc() throws RpcException {
         RpcServiceFactory factory = new RpcServiceFactory(null);
         final GitHubService github = factory.newRpcService(GitHubService.class, "https://api.github.com");
