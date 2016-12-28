@@ -41,9 +41,7 @@ import com.sdklite.rpc.http.annotation.Put;
 import com.sdklite.util.GenericType;
 import com.sdklite.util.Introspector;
 import com.sdklite.util.TypeResolver;
-
-import android.net.Uri;
-import android.text.TextUtils;
+import com.squareup.okhttp.HttpUrl;
 
 /**
  * Represents the HTTP RPC request
@@ -205,22 +203,22 @@ public class HttpRpcRequest extends HttpMessage implements RpcRequest {
         @Override
         @SuppressWarnings({ "rawtypes", "unchecked" })
         public Builder setService(final Class<? extends RpcService> service, final Method method, final Object... args) {
-            final Uri uri = Uri.parse(this.url);
-            final Uri.Builder uriBuilder = new Uri.Builder();
-            uriBuilder.scheme(uri.getScheme());
-            uriBuilder.encodedAuthority(uri.getEncodedAuthority());
-            uriBuilder.encodedPath(uri.getEncodedPath());
-            uriBuilder.encodedFragment(uri.getEncodedFragment());
+            final HttpUrl uri = HttpUrl.parse(this.url);
+            final HttpUrl.Builder uriBuilder = new HttpUrl.Builder();
+            uriBuilder.scheme(uri.scheme());
+            uriBuilder.host(uri.host());
+            uriBuilder.encodedPath(uri.encodedPath());
+            uriBuilder.encodedFragment(uri.encodedFragment());
 
             // add path
             if (service.isAnnotationPresent(Path.class)) {
                 final String path = service.getAnnotation(Path.class).value();
-                if (!TextUtils.isEmpty(path)) {
+                if (null != path && path.trim().length() > 0) {
                     final String[] segments = path.split("/");
                     if (null != segments && segments.length > 0) {
                         for (final String segment : segments) {
-                            if (!TextUtils.isEmpty(segment)) {
-                                uriBuilder.appendPath(segment);
+                            if (null != segment && segment.trim().length() > 0) {
+                                uriBuilder.addPathSegment(segment);
                             }
                         }
                     }
@@ -229,12 +227,12 @@ public class HttpRpcRequest extends HttpMessage implements RpcRequest {
 
             if (method.isAnnotationPresent(Path.class)) {
                 final String path = method.getAnnotation(Path.class).value();
-                if (!TextUtils.isEmpty(path)) {
+                if (null != path && path.trim().length() > 0) {
                     final String[] segments = path.split("/");
                     if (null != segments && segments.length > 0) {
                         for (final String segment : segments) {
-                            if (!TextUtils.isEmpty(segment)) {
-                                uriBuilder.appendPath(segment);
+                            if (null != segments && segments.length > 0) {
+                                uriBuilder.addPathSegment(segment);
                             }
                         }
                     }
@@ -279,7 +277,7 @@ public class HttpRpcRequest extends HttpMessage implements RpcRequest {
 
             if (queryParams.size() > 0) {
                 for (final RpcRequest.Parameter parameter : inflate(queryParams)) {
-                    uriBuilder.appendQueryParameter(parameter.getName(), String.valueOf(parameter.getValue()));
+                    uriBuilder.addQueryParameter(parameter.getName(), String.valueOf(parameter.getValue()));
                 }
             }
 
@@ -287,7 +285,7 @@ public class HttpRpcRequest extends HttpMessage implements RpcRequest {
                 for (final RpcRequest.Parameter parameter : inflate(pathParams)) {
                     final String name = parameter.getName();
                     final Object value = parameter.getValue();
-                    final List<String> segments = uriBuilder.build().getPathSegments();
+                    final List<String> segments = uriBuilder.build().pathSegments();
 
                     uriBuilder.encodedPath("");
 
@@ -311,7 +309,7 @@ public class HttpRpcRequest extends HttpMessage implements RpcRequest {
                             segment = resolved.toString();
                         }
 
-                        uriBuilder.appendPath(segment.replaceAll("/?([^/]*)/?", "$1"));
+                        uriBuilder.addPathSegment(segment.replaceAll("/?([^/]*)/?", "$1"));
                     }
                 }
             }
@@ -400,7 +398,7 @@ public class HttpRpcRequest extends HttpMessage implements RpcRequest {
                     setMethod(httpMethod, new HttpBody() {
                         @Override
                         public MimeType getContentType() {
-                            if (!TextUtils.isEmpty(contentType)) {
+                            if (null != contentType && contentType.trim().length() > 0) {
                                 return MimeType.parse(contentType);
                             }
 
@@ -476,7 +474,7 @@ public class HttpRpcRequest extends HttpMessage implements RpcRequest {
         static final List<RpcRequest.Parameter> inflate(final List<RpcRequest.Parameter> parameters) {
             final RpcRequest.Parameter first = parameters.isEmpty() ? null : parameters.iterator().next();
 
-            if (null == first || parameters.size() > 1 || !TextUtils.isEmpty(first.getName())) {
+            if (null == first || parameters.size() > 1 || (null != first.getName() && first.getName().trim().length() > 0)) {
                 return parameters;
             }
 
