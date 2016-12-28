@@ -32,7 +32,7 @@
     <dependency>
       <groupId>com.sdklite</groupId>
       <artifactId>rpc</artifactId>
-      <version>0.0.1</version>
+      <version>0.0.2</version>
     </dependency>
     <dependency>
       <groupId>com.sdklite.spi</groupId>
@@ -44,6 +44,12 @@
       <artifactId>okhttp</artifactId>
       <version>2.7.5</version>
     </dependency>
+    <dependency>
+      <groupId>com.sdklite</groupId>
+      <artifactId>gson</artifactId>
+      <version>0.0.2</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -53,8 +59,6 @@
         <artifactId>maven-javadoc-plugin</artifactId>
         <version>2.10.3</version>
         <configuration>
-          <show>public</show>
-          <nohelp>true</nohelp>
           <links>
             <link>http://io.sdklite.com</link>
             <link>http://net.sdklite.com</link>
