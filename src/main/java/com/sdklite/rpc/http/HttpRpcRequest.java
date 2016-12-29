@@ -24,6 +24,7 @@ import com.sdklite.net.http.HttpHeader;
 import com.sdklite.net.http.HttpHeaders;
 import com.sdklite.net.http.HttpMessage;
 import com.sdklite.net.http.HttpMethod;
+import com.sdklite.net.http.MultipartSerializer;
 import com.sdklite.rpc.RpcRequest;
 import com.sdklite.rpc.RpcService;
 import com.sdklite.rpc.annotation.BodyParameter;
@@ -361,9 +362,15 @@ public class HttpRpcRequest extends HttpMessage implements RpcRequest {
             final Deserialization deserialization = method.getAnnotation(Deserialization.class);
 
             // Set HTTP entity
-            final Type type = callback != null ? TypeResolver.getGenericTypeParameter(callback) : method.getReturnType();
-            final Class<? extends Serializer> classOfSerializer = null != serialization ? serialization.value() : FormSerializer.class;
-            final Class<? extends Deserializer> classOfDeserializer = null != deserialization ? deserialization.value() : null;
+            final Type type = callback != null
+                    ? TypeResolver.getGenericTypeParameter(callback)
+                    : method.getReturnType();
+            final Class<? extends Serializer> classOfSerializer = null != serialization
+                    ? serialization.value()
+                    : (null != contentType && contentType.startsWith("multipart/")) ? MultipartSerializer.class : FormSerializer.class;
+            final Class<? extends Deserializer> classOfDeserializer = null != deserialization
+                    ? deserialization.value()
+                    : null;
 
             if (null != classOfSerializer) {
                 try {
@@ -396,11 +403,15 @@ public class HttpRpcRequest extends HttpMessage implements RpcRequest {
                     setMethod(httpMethod, new HttpBody() {
                         @Override
                         public MimeType getContentType() {
-                            if (null != contentType && contentType.trim().length() > 0) {
-                                return MimeType.parse(contentType);
+                            if (null == contentType || contentType.trim().length() <= 0) {
+                                return null;
                             }
 
-                            return null;
+                            if (contentType.startsWith("multipart/") && serializer instanceof MultipartSerializer) {
+                                return MimeType.parse(contentType + "; boundary=" + ((MultipartSerializer) serializer).getBoundary());
+                            }
+
+                            return MimeType.parse(contentType);
                         }
 
                         @Override
