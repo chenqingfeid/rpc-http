@@ -32,7 +32,7 @@
     <dependency>
       <groupId>com.sdklite</groupId>
       <artifactId>rpc</artifactId>
-      <version>0.0.4</version>
+      <version>0.0.3</version>
     </dependency>
     <dependency>
       <groupId>com.sdklite.spi</groupId>
