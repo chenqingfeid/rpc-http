@@ -47,7 +47,7 @@ void upload(@BodyParameter("file") File file) throws RpcException;
 ### Gradle
 
 ```gradle
-compile 'com.sdklite.rpc:http:0.0.1'
+compile 'com.sdklite.rpc:http:0.0.2'
 ```
 
 ### Maven
@@ -56,7 +56,7 @@ compile 'com.sdklite.rpc:http:0.0.1'
 <dependency>
   <groupId>com.sdklite.rpc</groupId>
   <artifactId>http</artifactId>
-  <version>0.0.1</version>
+  <version>0.0.2</version>
 </dependency>
 ```
 
