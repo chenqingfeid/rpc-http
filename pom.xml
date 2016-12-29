@@ -11,7 +11,7 @@
 
   <groupId>com.sdklite.rpc</groupId>
   <artifactId>http</artifactId>
-  <version>0.0.1</version>
+  <version>0.0.2</version>
 
   <name>HTTP RPC implementation</name>
   <url>http://http.rpc.sdklite.com</url>
@@ -31,13 +31,8 @@
   <dependencies>
     <dependency>
       <groupId>com.sdklite</groupId>
-      <artifactId>io</artifactId>
-      <version>0.0.2</version>
-    </dependency>
-    <dependency>
-      <groupId>com.sdklite</groupId>
       <artifactId>rpc</artifactId>
-      <version>0.0.2</version>
+      <version>0.0.4</version>
     </dependency>
     <dependency>
       <groupId>com.sdklite.spi</groupId>
